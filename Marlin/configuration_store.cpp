@@ -223,7 +223,7 @@ void MarlinSettings::postprocess() {
   planner.refresh_positioning();
 
   #if ENABLED(PIDTEMP)
-    thermalManager.update_pid();
+    thermalManager.updatePID();
   #endif
 
   calculate_volumetric_multipliers();

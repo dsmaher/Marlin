@@ -47,11 +47,7 @@
 #define MSG_AUTOSTART                       _UxGT("Autostart")
 #define MSG_DISABLE_STEPPERS                _UxGT("Uvolnit motory")
 #define MSG_DEBUG_MENU                      _UxGT("Nabídka ladění")
-#if LCD_WIDTH >= 20
-  #define MSG_PROGRESS_BAR_TEST             _UxGT("Test ukaz. průběhu")
-#else
-  #define MSG_PROGRESS_BAR_TEST             _UxGT("Test uk. průběhu")
-#endif
+#define MSG_PROGRESS_BAR_TEST               _UxGT("Test uk. průběhu")
 #define MSG_AUTO_HOME                       _UxGT("Domovská pozice")
 #define MSG_AUTO_HOME_X                     _UxGT("Domů osa X")
 #define MSG_AUTO_HOME_Y                     _UxGT("Domů osa Y")
@@ -117,8 +113,8 @@
 #define MSG_UBL_VALIDATE_CUSTOM_MESH        _UxGT("Kontrola vlast. sítě")
 #define MSG_UBL_CONTINUE_MESH               _UxGT("Pokračovat v síťi")
 #define MSG_UBL_MESH_LEVELING               _UxGT("Síťové rovnání")
-#define MSG_UBL_3POINT_MESH_LEVELING        _UxGT("3-bodové rovnání")
-#define MSG_UBL_GRID_MESH_LEVELING          _UxGT("Mřížkové rovnání")
+#define MSG_UBL_3POINT_MESH_LEVELING        _UxGT("3-bodove rovnání")
+#define MSG_UBL_GRID_MESH_LEVELING          _UxGT("Mrizkove rovnání")
 #define MSG_UBL_MESH_LEVEL                  _UxGT("Srovnat podložku")
 #define MSG_UBL_SIDE_POINTS                 _UxGT("Postranní body")
 #define MSG_UBL_MAP_TYPE                    _UxGT("Typ sítě bodu")
@@ -179,7 +175,6 @@
 #define MSG_VY_JERK                         _UxGT("Vy-jerk")
 #define MSG_VZ_JERK                         _UxGT("Vz-jerk")
 #define MSG_VE_JERK                         _UxGT("Ve-jerk")
-#define MSG_JUNCTION_DEVIATION              _UxGT("Odchylka spoje")
 #define MSG_VELOCITY                        _UxGT("Rychlost")
 #define MSG_VMAX                            _UxGT("Vmax ")
 #define MSG_VMIN                            _UxGT("Vmin")

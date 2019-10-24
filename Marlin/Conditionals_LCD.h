@@ -394,26 +394,13 @@
     #define E_MANUAL      EXTRUDERS
     #define TOOL_E_INDEX  current_block->active_extruder
   #endif
-  #undef Z_SERVO_ANGLES
-  #define Z_SERVO_ANGLES { BLTOUCH_DEPLOY, BLTOUCH_STOW }
 
-  #define BLTOUCH_DEPLOY    10
-  #define BLTOUCH_SW_MODE   60
-  #define BLTOUCH_STOW      90
-  #define BLTOUCH_SELFTEST 120
-  #define BLTOUCH_5V_MODE  140
-  #define BLTOUCH_OD_MODE  150
-  #define BLTOUCH_RESET    160
-  #define _TEST_BLTOUCH(P) (READ(P##_PIN) != P##_ENDSTOP_INVERTING)
-
-  // Always disable probe pin inverting for BLTouch
-  #undef Z_MIN_PROBE_ENDSTOP_INVERTING
-  #define Z_MIN_PROBE_ENDSTOP_INVERTING false
-
-  #if ENABLED(Z_MIN_PROBE_USES_Z_MIN_ENDSTOP_PIN)
-    #undef Z_MIN_ENDSTOP_INVERTING
-    #define Z_MIN_ENDSTOP_INVERTING Z_MIN_PROBE_ENDSTOP_INVERTING
-    #define TEST_BLTOUCH() _TEST_BLTOUCH(Z_MIN)
+  /**
+   * DISTINCT_E_FACTORS affects how some E factors are accessed
+   */
+  #if ENABLED(DISTINCT_E_FACTORS) && E_STEPPERS > 1
+    #define XYZE_N (XYZ + E_STEPPERS)
+    #define E_AXIS_N (E_AXIS + extruder)
   #else
     #undef DISTINCT_E_FACTORS
     #define XYZE_N XYZE
@@ -443,8 +430,11 @@
     #define Z_SERVO_ANGLES { BLTOUCH_DEPLOY, BLTOUCH_STOW }
 
     #define BLTOUCH_DEPLOY    10
+    #define BLTOUCH_SW_MODE   60
     #define BLTOUCH_STOW      90
     #define BLTOUCH_SELFTEST 120
+    #define BLTOUCH_5V_MODE  140
+    #define BLTOUCH_OD_MODE  150
     #define BLTOUCH_RESET    160
     #define _TEST_BLTOUCH(P) (READ(P##_PIN) != P##_ENDSTOP_INVERTING)
 

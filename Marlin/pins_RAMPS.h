@@ -425,7 +425,7 @@
 
       #define SDSS              53
       #define SD_DETECT_PIN     49
-      #define KILL_PIN          41
+      #define KILL_PIN          64
 
     #elif ENABLED(MINIPANEL)
 

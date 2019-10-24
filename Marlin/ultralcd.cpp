@@ -919,6 +919,10 @@ void kill_screen(const char* lcd_msg) {
       MENU_ITEM(gcode, MSG_BLTOUCH_SELFTEST, PSTR("M280 P" STRINGIFY(Z_ENDSTOP_SERVO_NR) " S" STRINGIFY(BLTOUCH_SELFTEST)));
       MENU_ITEM(gcode, MSG_BLTOUCH_DEPLOY, PSTR("M280 P" STRINGIFY(Z_ENDSTOP_SERVO_NR) " S" STRINGIFY(BLTOUCH_DEPLOY)));
       MENU_ITEM(gcode, MSG_BLTOUCH_STOW, PSTR("M280 P" STRINGIFY(Z_ENDSTOP_SERVO_NR) " S" STRINGIFY(BLTOUCH_STOW)));
+      // BLTouch has no physical response under these instructions, so delete the control display to avoid user misunderstanding
+	  // MENU_ITEM(gcode, MSG_BLTOUCH_SW_MODE, PSTR("M280 P" STRINGIFY(Z_ENDSTOP_SERVO_NR) " S" STRINGIFY(BLTOUCH_SW_MODE)));
+      // MENU_ITEM(gcode, MSG_BLTOUCH_5V_MODE, PSTR("M280 P" STRINGIFY(Z_ENDSTOP_SERVO_NR) " S" STRINGIFY(BLTOUCH_5V_MODE)));
+      // MENU_ITEM(gcode, MSG_BLTOUCH_OD_MODE, PSTR("M280 P" STRINGIFY(Z_ENDSTOP_SERVO_NR) " S" STRINGIFY(BLTOUCH_OD_MODE)));
       END_MENU();
     }
 
@@ -1121,7 +1125,7 @@ void kill_screen(const char* lcd_msg) {
     #endif // SDSUPPORT
 
     #if ENABLED(LCD_INFO_MENU)
-      MENU_ITEM(submenu, MSG_INFO_MENU, lcd_info_printer_menu);
+      MENU_ITEM(submenu, MSG_INFO_MENU, lcd_info_menu);
     #endif
 
     END_MENU();
@@ -1769,12 +1773,6 @@ void kill_screen(const char* lcd_msg) {
 
 
   #if ENABLED(LEVEL_BED_CORNERS)
-
-    #ifndef LEVEL_CORNERS_Z_HOP
-      #define LEVEL_CORNERS_Z_HOP 4.0
-    #endif
-
-    static_assert(LEVEL_CORNERS_Z_HOP >= 0, "LEVEL_CORNERS_Z_HOP must be >= 0. Please update your configuration.");
 
     /**
      * Level corners, starting in the front-left corner.
@@ -3332,14 +3330,14 @@ static void lcd_autohome()
         UNUSED(e);
       #endif
       PID_PARAM(Ki, e) = scalePID_i(raw_Ki);
-      thermalManager.update_pid();
+      thermalManager.updatePID();
     }
     void copy_and_scalePID_d(int16_t e) {
       #if DISABLED(PID_PARAMS_PER_HOTEND) || HOTENDS == 1
         UNUSED(e);
       #endif
       PID_PARAM(Kd, e) = scalePID_d(raw_Kd);
-      thermalManager.update_pid();
+      thermalManager.updatePID();
     }
     #define _DEFINE_PIDTEMP_BASE_FUNCS(N) \
       void copy_and_scalePID_i_E ## N() { copy_and_scalePID_i(N); } \
@@ -5097,14 +5095,15 @@ void lcd_reset_alert_level() { lcd_status_message_level = 0; }
 
         #endif // LCD_HAS_DIRECTIONAL_BUTTONS
 
-        #if ENABLED(LCD_HAS_SLOW_BUTTONS)
-          newbutton |= slow_buttons;
-        #endif
         buttons = newbutton;
+        #if ENABLED(LCD_HAS_SLOW_BUTTONS)
+          buttons |= slow_buttons;
+        #endif
 
         #if ENABLED(ADC_KEYPAD)
 
           uint8_t newbutton_reprapworld_keypad = 0;
+          buttons = 0;
           if (buttons_reprapworld_keypad == 0) {
             newbutton_reprapworld_keypad = get_ADC_keyValue();
             if (WITHIN(newbutton_reprapworld_keypad, 1, 8))

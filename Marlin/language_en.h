@@ -632,15 +632,6 @@
 #ifndef MSG_BLTOUCH
   #define MSG_BLTOUCH                         _UxGT("BLTouch")
 #endif
-#ifndef MSG_BLTOUCH_SW_MODE
-  #define MSG_BLTOUCH_SW_MODE                 _UxGT("SW Deploy BLTouch")
-#endif
-#ifndef MSG_BLTOUCH_5V_MODE
-  #define MSG_BLTOUCH_5V_MODE                 _UxGT("BLTouch 5V Mode")
-#endif
-#ifndef MSG_BLTOUCH_OD_MODE
-  #define MSG_BLTOUCH_OD_MODE                 _UxGT("BLTouch OD Mode")
-#endif
 #ifndef MSG_BLTOUCH_SELFTEST
   #define MSG_BLTOUCH_SELFTEST                _UxGT("BLTouch Self-Test")
 #endif
@@ -652,6 +643,15 @@
 #endif
 #ifndef MSG_BLTOUCH_STOW
   #define MSG_BLTOUCH_STOW                    _UxGT("Stow BLTouch")
+#endif
+#ifndef MSG_BLTOUCH_SW_MODE
+  #define MSG_BLTOUCH_SW_MODE                 _UxGT("SW Deploy BLTouch")
+#endif
+#ifndef MSG_BLTOUCH_5V_MODE
+  #define MSG_BLTOUCH_5V_MODE                 _UxGT("BLTouch 5V Mode")
+#endif
+#ifndef MSG_BLTOUCH_OD_MODE
+  #define MSG_BLTOUCH_OD_MODE                 _UxGT("BLTouch OD Mode")
 #endif
 #ifndef MSG_HOME
   #define MSG_HOME                            _UxGT("Home") // Used as MSG_HOME " " MSG_X MSG_Y MSG_Z " " MSG_FIRST

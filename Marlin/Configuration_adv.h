@@ -483,7 +483,7 @@
   // using:
   //#define MENU_ADDAUTOSTART
 
-  // If power off, after power on, the printing can be resumed. 
+  // If power off, after power on, the printing can be resumed.
   #define POWEROFF_SAVE_SD_FILE
 
   /**
@@ -683,7 +683,7 @@
 //
 // G2/G3 Arc Support
 //
-#define ARC_SUPPORT               // Disable this feature to save ~3226 bytes
+//#define ARC_SUPPORT               // Disable this feature to save ~3226 bytes
 #if ENABLED(ARC_SUPPORT)
   #define MM_PER_ARC_SEGMENT  1   // Length of each arc segment
   #define N_ARC_CORRECTION   25   // Number of intertpolated segments between corrections
@@ -821,9 +821,9 @@
  */
 #define ADVANCED_PAUSE_FEATURE
 #if ENABLED(ADVANCED_PAUSE_FEATURE)
-  #define PAUSE_PARK_X_POS 0                  // X position of hotend
-  #define PAUSE_PARK_Y_POS 0                  // Y position of hotend
-  #define PAUSE_PARK_Z_ADD 0                  // Z addition of hotend (lift)
+  #define PAUSE_PARK_X_POS 3                  // X position of hotend
+  #define PAUSE_PARK_Y_POS 3                  // Y position of hotend
+  #define PAUSE_PARK_Z_ADD 10                 // Z addition of hotend (lift)
   #define PAUSE_PARK_XY_FEEDRATE 100          // X and Y axes feedrate in mm/s (also used for delta printers Z axis)
   #define PAUSE_PARK_Z_FEEDRATE 5             // Z axis feedrate in mm/s (not used for delta printers)
   #define PAUSE_PARK_RETRACT_FEEDRATE 60      // Initial retract feedrate in mm/s
@@ -1264,7 +1264,7 @@
  *  - M206 and M428 are disabled.
  *  - G92 will revert to its behavior from Marlin 1.0.
  */
-//#define NO_WORKSPACE_OFFSETS
+#define NO_WORKSPACE_OFFSETS
 
 /**
  * Set the number of proportional font spaces required to fill up a typical character space.

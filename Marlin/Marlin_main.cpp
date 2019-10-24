@@ -2160,16 +2160,19 @@ static void clean_up_after_endstop_or_probe_move() {
         }
       }
 
-      #if ENABLED(BLTOUCH_FORCE_5V_MODE)
-        bltouch_command(BLTOUCH_5V_MODE);
-      #elif ENABLED(BLTOUCH_V3)
-        bltouch_command(BLTOUCH_OD_MODE);
+      #if ENABLED(BLTOUCH_V3)
+        #if ENABLED(BLTOUCH_FORCE_5V_MODE)
+         bltouch_command(BLTOUCH_5V_MODE);
+        #elif
+          bltouch_command(BLTOUCH_OD_MODE);
+        #endif
       #endif
 
       bltouch_command(deploy ? BLTOUCH_DEPLOY : BLTOUCH_STOW);
 
       #if ENABLED(BLTOUCH_V3)
-        if (deploy) bltouch_command(BLTOUCH_SW_MODE);
+        if(deploy)
+          bltouch_command(BLTOUCH_SW_MODE);
       #endif
 
       #if ENABLED(DEBUG_LEVELING_FEATURE)
@@ -2818,11 +2821,13 @@ static void clean_up_after_endstop_or_probe_move() {
 
   }
 
-  static void print_bilinear_leveling_grid() {
+  static void print_bilinear_leveling_grid()
+  {
     SERIAL_ECHOLNPGM("Bilinear Leveling Grid:");
     print_2d_array(GRID_MAX_POINTS_X, GRID_MAX_POINTS_Y, 3,
       [](const uint8_t ix, const uint8_t iy) { return z_values[ix][iy]; }
     );
+    enqueue_and_echo_commands_P(PSTR("G0 F3600 X117 Y117"));
   }
 
   #if ENABLED(ABL_BILINEAR_SUBDIVISION)
@@ -5120,6 +5125,7 @@ void home_all_axes() { gcode_G28(true); }
         if (!dryrun) extrapolate_unprobed_bed_level();
         print_bilinear_leveling_grid();
 
+        settings.save();
         refresh_bed_level();
 
         #if ENABLED(ABL_BILINEAR_SUBDIVISION)
@@ -9050,7 +9056,7 @@ inline void gcode_M226() {
         NOMORE(lpq_len, LPQ_MAX_LEN);
       #endif
 
-      thermalManager.update_pid();
+      thermalManager.updatePID();
       SERIAL_ECHO_START();
       #if ENABLED(PID_PARAMS_PER_HOTEND)
         SERIAL_ECHOPAIR(" e:", e); // specify extruder in serial output
@@ -9198,7 +9204,7 @@ inline void gcode_M303() {
       KEEPALIVE_STATE(NOT_BUSY);
     #endif
 
-    thermalManager.pid_autotune(temp, e, c, u);
+    thermalManager.PID_autotune(temp, e, c, u);
 
     #if DISABLED(BUSY_WHILE_HEATING)
       KEEPALIVE_STATE(IN_HANDLER);
@@ -11031,6 +11037,7 @@ void process_next_command() {
 
       case 28: // G28: Home all axes, one at a time
         gcode_G28(false);
+        set_bed_leveling_enabled(true);
         break;
 
       #if HAS_LEVELING
@@ -12931,7 +12938,7 @@ void prepare_move_to_destination() {
 
 #if ENABLED(TEMP_STAT_LEDS)
 
-  static uint8_t red_led = -1;  // Invalid value to force leds initializzation on startup
+  static bool red_led = false;
   static millis_t next_status_led_update_ms = 0;
 
   void handle_status_leds(void) {
@@ -12943,14 +12950,16 @@ void prepare_move_to_destination() {
       #endif
       HOTEND_LOOP()
         max_temp = MAX3(max_temp, thermalManager.degHotend(e), thermalManager.degTargetHotend(e));
-      const uint8_t new_led = (max_temp > 55.0) ? HIGH : (max_temp < 54.0 || red_led == -1) ? LOW : red_led;
+      const bool new_led = (max_temp > 55.0) ? true : (max_temp < 54.0) ? false : red_led;
       if (new_led != red_led) {
         red_led = new_led;
         #if PIN_EXISTS(STAT_LED_RED)
-          WRITE(STAT_LED_RED_PIN, new_led);
-        #endif
-        #if PIN_EXISTS(STAT_LED_BLUE)
-          WRITE(STAT_LED_BLUE_PIN, !new_led);
+          WRITE(STAT_LED_RED_PIN, new_led ? HIGH : LOW);
+          #if PIN_EXISTS(STAT_LED_BLUE)
+            WRITE(STAT_LED_BLUE_PIN, new_led ? LOW : HIGH);
+          #endif
+        #else
+          WRITE(STAT_LED_BLUE_PIN, new_led ? HIGH : LOW);
         #endif
       }
     }

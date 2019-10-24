@@ -292,14 +292,8 @@ class Temperature {
     /**
      * Static (class) methods
      */
-    static float analog_to_celsius_hotend(const int raw, const uint8_t e);
-
-    #if HAS_HEATED_BED
-      static float analog_to_celsius_bed(const int raw);
-    #endif
-    #if HAS_TEMP_CHAMBER
-      static float analog_to_celsius_chamber(const int raw);
-    #endif
+    static float analog2temp(int raw, uint8_t e);
+    static float analog2tempBed(int raw);
 
     /**
      * Called from the Temperature ISR
@@ -338,8 +332,8 @@ class Temperature {
     #endif
 
     #if ENABLED(FILAMENT_WIDTH_SENSOR)
-      static float analog_to_mm_fil_width();         // Convert raw Filament Width to millimeters
-      static int8_t widthFil_to_size_ratio(); // Convert Filament Width (mm) to an extrusion ratio
+      static float analog2widthFil(); // Convert raw Filament Width to millimeters
+      static int widthFil_to_size_ratio(); // Convert raw Filament Width to an extrusion ratio
     #endif
 
 
@@ -392,10 +386,7 @@ class Temperature {
         else if (target_temperature[HOTEND_INDEX] == 0)
           start_preheat_time(HOTEND_INDEX);
       #endif
-      #if ENABLED(AUTO_POWER_CONTROL)
-        powerManager.power_on();
-      #endif
-      target_temperature[HOTEND_INDEX] = MIN(celsius, maxttemp[HOTEND_INDEX] - 15);
+      target_temperature[HOTEND_INDEX] = celsius;
       #if WATCH_HOTENDS
         start_watching_heater(HOTEND_INDEX);
       #endif
@@ -405,7 +396,7 @@ class Temperature {
       #if HAS_HEATER_BED
         target_temperature_bed =
           #ifdef BED_MAXTEMP
-            MIN(celsius, BED_MAXTEMP - 15)
+            min(celsius, BED_MAXTEMP)
           #else
             celsius
           #endif
@@ -446,19 +437,7 @@ class Temperature {
      * Perform auto-tuning for hotend or bed in response to M303
      */
     #if HAS_PID_HEATING
-      static void pid_autotune(const float &target, const int8_t hotend, const int8_t ncycles, const bool set_result=false);
-
-      /**
-       * Update the temp manager when PID values change
-       */
-      #if ENABLED(PIDTEMP)
-        FORCE_INLINE static void update_pid() {
-          #if ENABLED(PID_EXTRUSION_SCALING)
-            last_e_position = 0;
-          #endif
-        }
-      #endif
-
+      static void PID_autotune(float temp, int hotend, int ncycles, bool set_result=false);
     #endif
 
     /**
@@ -556,13 +535,13 @@ class Temperature {
 
     static void set_current_temp_raw();
 
-    static void calculate_celsius_temperatures();
+    static void updateTemperaturesFromRawValues();
 
     #if ENABLED(HEATER_0_USES_MAX6675)
       static int read_max6675();
     #endif
 
-    static void check_extruder_auto_fans();
+    static void checkExtruderAutoFans();
 
     static float get_pid_output(const int8_t e);
 
